@@ -1,0 +1,10 @@
+@import 'mixins';
+
+@mixin font-face($font-name, $file-name, $weight: normal, $style: normal) {
+    @font-face {
+        font-family: '#{$font-name}';
+        src: url('../asset/font/#{$file-name}.otf') format('truetype');
+        font-weight: $weight;
+        font-style: $style;
+    }
+}

@@ -1,0 +1,52 @@
+@import 'src/view/style/color.scss';
+@import 'src/view/style/font.scss';
+@import 'src/view/style/mixins.scss';
+@import 'src/view/style/variable.scss';
+
+.option-game {
+  position: relative;
+
+  &-button {
+    border-radius: 4px;
+    appearance: none;
+    padding: 5px 10px;
+    border: none;
+    outline: none;
+    background-color: white;
+    transition: all 0.25s;
+
+    &:hover {
+      background-color: cornflowerblue;
+      color: white;
+      cursor: pointer;
+    }
+  }
+
+  &-list {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    bottom: -10px;
+    transform: translateY(100%);
+    margin: 0;
+    border: solid 1px $gray4;
+    background-color: white;
+  }
+
+  &-item {
+    width: 100%;
+    white-space: nowrap;
+    text-align: center;
+    font-size: 12px;
+    transition: all 0.25s;
+    padding: 2px 4px;
+
+    &:hover {
+      background-color: $gray5;
+    }
+  }
+
+
+}

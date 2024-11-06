@@ -1,0 +1,66 @@
+@mixin mobile {
+    @media only screen and (min-width: 425px) {
+        @content;
+    }
+}
+
+@mixin tablet {
+    @media only screen and (min-width: 768px) {
+        @content;
+    }
+}
+
+@mixin laptop {
+    @media only screen and (min-width: 1024px) {
+        @content;
+    }
+}
+
+@mixin width-1200 {
+    @media only screen and (min-width: 1200px) {
+        @content;
+    }
+}
+
+@mixin desktop {
+    @media only screen and (min-width: 1440px) {
+        @content;
+    }
+}
+
+@mixin large-screen {
+    @media only screen and (min-width: 1920px) {
+        @content;
+    }
+}
+
+@mixin over-width($width) {
+    @media only screen and (min-width: $width) {
+        @content;
+    }
+}
+
+@mixin max-width-container($width) {
+    width: 100%;
+    padding-left: max(calc((100% - #{$width}) / 2), 20px);
+    padding-right: max(calc((100% - #{$width}) / 2), 20px);
+}
+
+@mixin hover-border($originColor, $hoverColor) {
+
+    border: solid 1px $originColor;
+    transition: border 0.2s;
+
+    &:hover {
+        border: solid 1px $hoverColor;
+    }
+}
+
+@mixin hide-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}

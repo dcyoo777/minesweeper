@@ -1,0 +1,12 @@
+@import 'src/view/style/color.scss';
+@import 'src/view/style/font.scss';
+@import 'src/view/style/mixins.scss';
+@import 'src/view/style/variable.scss';
+
+.header {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  gap: 10px;
+  background-color: $gray4;
+}
