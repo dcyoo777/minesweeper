@@ -3,6 +3,7 @@ import './OptionGame.scss'
 import {useDispatch} from "react-redux";
 import {changeLevel, GAME_LEVELS, newGame} from "../../redux/game";
 import useClickOutside from "../../hook/useClickOutside";
+import LevelCustomModal from "./LevelCustomModal";
 
 function OptionGame() {
 
@@ -24,7 +25,7 @@ function OptionGame() {
         if (level) {
             dispatch(changeLevel(GAME_LEVELS[level]))
         } else {
-
+            setIsOpenCustomModal(true)
         }
     }, [dispatch])
 
@@ -36,16 +37,16 @@ function OptionGame() {
 
     return (
         <header className="option-game" ref={optionGameRef}>
+            <LevelCustomModal isOpen={isOpenCustomModal} onClose={() => {setIsOpenCustomModal(false)}} />
             <button className="option-game-button" onClick={onClickOption}>
                 Game
             </button>
             {isOpenOption && (
                 <div className="option-game-list">
                     <button className="option-game-item" onClick={onClickNew}>New</button>
-                    {Object.keys(GAME_LEVELS).map(level => <button className="option-game-item" name={level} onClick={onClickLevel}>
+                    {Object.keys(GAME_LEVELS).concat(["Custom"]).map(level => <button className="option-game-item" name={level} onClick={onClickLevel}>
                         {level}
                     </button>)}
-                    <button className="option-game-item">Custom</button>
                     <button className="option-game-item">Personal Best</button>
                     <button className="option-game-item">Exit</button>
                 </div>

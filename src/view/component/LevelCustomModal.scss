@@ -1,0 +1,72 @@
+@import 'src/view/style/color.scss';
+@import 'src/view/style/font.scss';
+@import 'src/view/style/mixins.scss';
+@import 'src/view/style/variable.scss';
+
+.level-custom-modal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+
+  &-body {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+  }
+
+  &-row {
+    display: flex;
+    align-items: center;
+    width: 100%;
+
+    &-label {
+      width: 100px;
+    }
+
+    &-input {
+      width: 100%;
+      border: solid 1px $gray3;
+      border-radius: 4px;
+      padding: 5px;
+      outline: none;
+    }
+  }
+
+  &-button-wrapper {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    gap: 10px;
+  }
+
+  &-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    border-radius: 4px;
+    appearance: none;
+    padding: 5px 10px;
+    border: none;
+    outline: none;
+    background-color: $gray4;
+    transition: all 0.25s;
+
+    &.cancel {
+      background-color: $gray4;
+    }
+
+    &.save {
+      background-color: $primary;
+      color: $white;
+    }
+
+    &:hover {
+      //background-color: $gray3;
+      //color: white;
+      cursor: pointer;
+    }
+  }
+}
