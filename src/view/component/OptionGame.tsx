@@ -29,6 +29,8 @@ function OptionGame() {
         }
     }, [dispatch])
 
+    const onClickExit = useCallback(() => {window.close()}, [])
+
     const optionGameRef = useClickOutside({
         handler: () => {
             setIsOpenOption(false)
@@ -48,7 +50,7 @@ function OptionGame() {
                         {level}
                     </button>)}
                     <button className="option-game-item">Personal Best</button>
-                    <button className="option-game-item">Exit</button>
+                    <button className="option-game-item" onClick={onClickExit}>Exit</button>
                 </div>
             )}
         </header>
