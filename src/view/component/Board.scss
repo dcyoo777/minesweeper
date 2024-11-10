@@ -1,0 +1,23 @@
+@import 'src/view/style/color.scss';
+@import 'src/view/style/font.scss';
+@import 'src/view/style/mixins.scss';
+@import 'src/view/style/variable.scss';
+
+.board {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 500px;
+  padding: 8px;
+
+  &-score {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  &-button {
+
+  }
+
+}

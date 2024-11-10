@@ -1,4 +1,4 @@
-import {createSlice, Slice} from "@reduxjs/toolkit";
+import {createSlice, PayloadAction, Slice} from "@reduxjs/toolkit";
 import {RootState} from "./index";
 
 export const GAME_LEVELS = {
@@ -14,6 +14,8 @@ export const GAME_STATUS = {
 } as const;
 
 export type Cell = {
+    row: number;
+    col: number;
     isMine: boolean;
     isOpened: boolean;
     isFlagged: boolean;
@@ -24,7 +26,7 @@ export type Game = {
     width: number;
     height: number;
     mines: number;
-    map: Cell[][];
+    gameMap: Cell[][];
     status: typeof GAME_STATUS[keyof typeof GAME_STATUS];
     level: keyof typeof GAME_LEVELS;
     startTime: number;
@@ -35,15 +37,25 @@ export type Game = {
     mineCount: number;
 };
 
-type AppNoteRedux = Game & any
+type AppNoteRedux = Game
 
 const create_clean_map = (width: number, height: number): Cell[][] => {
-    return Array.from({length: height}, () => Array.from({length: width}, () => ({
-        isMine: false,
-        isOpened: false,
-        isFlagged: false,
-        around: 0,
-    })));
+    const map: Cell[][] = [];
+    for (let row = 0; row < height; row++) {
+        const temp: Cell[] = [];
+        for (let col = 0; col < width; col++) {
+            temp.push({
+                row,
+                col,
+                isMine: false,
+                isOpened: false,
+                isFlagged: false,
+                around: 0,
+            } as Cell);
+        }
+        map.push(temp);
+    }
+    return map;
 }
 
 const create_mine_map = (width: number, height: number, mines: number, avoidX: number, avoidY: number): Cell[][] => {
@@ -92,7 +104,7 @@ const INITIAL_GAME_STATE: AppNoteRedux = {
     width: 8,
     height: 8,
     mines: 10,
-    map: create_clean_map(8, 8),
+    gameMap: create_clean_map(8, 8),
     status: GAME_STATUS.READY,
     level: 'Beginner',
     startTime: 0,
@@ -108,70 +120,78 @@ const gameSlice: Slice<AppNoteRedux> = createSlice({
     initialState: INITIAL_GAME_STATE,
     reducers: {
         newGame: (state, action) => {
-            state.map = create_clean_map(state.width, state.height);
+            state.gameMap = create_clean_map(state.width, state.height);
             state.status = GAME_STATUS.READY;
         },
         changeLevel: (state, action: {payload: {width: number, height: number, mines: number}}) => {
             state.width = action.payload.width;
             state.height = action.payload.height;
             state.mines = action.payload.mines;
-            state.map = create_clean_map(state.width, state.height);
+            state.gameMap = create_clean_map(state.width, state.height);
             state.status = GAME_STATUS.READY;
         },
-        onOpen: (state, action: {payload: {x: number, y: number}}) => {
-
-            if (state.status !== GAME_STATUS.GAME_OVER) {
-                return;
-            }
-
-            if (state.status === GAME_STATUS.READY) {
-                state.map = create_mine_map(state.width, state.height, state.mines, action.payload.x, action.payload.y);
-                state.status = GAME_STATUS.PLAYING;
-                state.startTime = Date.now();
-            }
-
-            const {x, y} = action.payload;
-            const cell = state.map[y][x];
-
-            if (cell.isMine) {
+        createMapAvoidPoint: (state, action: PayloadAction<{row: number, col: number}>) => {
+            const {row, col} = action.payload;
+            state.gameMap = create_mine_map(state.width, state.height, state.mines, col, row);
+            state.openedCount = 0;
+            state.flagCount = 0;
+            state.status = GAME_STATUS.PLAYING;
+            state.startTime = Date.now();
+        },
+        openCell: (state, action: PayloadAction<{row: number, col: number}>) => {
+            const {row, col} = action.payload;
+            state.gameMap[row][col].isOpened = true;
+            state.openedCount++;
+            if (state.width * state.height === state.flagCount + state.openedCount) {
                 state.status = GAME_STATUS.GAME_OVER;
                 state.endTime = Date.now();
                 state.duration = state.endTime - state.startTime;
             }
-
-            const openQueue = [{x, y}];
-
-            while (openQueue.length > 0) {
-                const {x, y} = openQueue.shift()!;
-                const cell = state.map[y][x];
-                if (cell.isOpened || cell.isFlagged) {
-                    continue;
-                }
-                cell.isOpened = true;
-                state.openedCount++;
-                if (cell.around === 0) {
-                    for (let dy = -1; dy <= 1; dy++) {
-                        for (let dx = -1; dx <= 1; dx++) {
-                            const xx = x + dx;
-                            const yy = y + dy;
-                            if (xx < 0 || xx >= state.width || yy < 0 || yy >= state.height) {
-                                continue;
-                            }
-                            openQueue.push({x: xx, y: yy});
-                        }
+        },
+        openMine: (state) => {
+            state.gameMap.forEach(row => {
+                row.forEach(cell => {
+                    if (cell.isMine) {
+                        cell.isOpened = true;
                     }
-                }
+                });
+            });
+            state.status = GAME_STATUS.GAME_OVER;
+            state.endTime = Date.now();
+            state.duration = state.endTime - state.startTime;
+        },
+        flagCell: (state, action: PayloadAction<{row: number, col: number}>) => {
+            const {row, col} = action.payload;
+            console.log('Flag', row, col)
+            state.gameMap[row][col].isFlagged = true;
+            state.flagCount += 1;
+            if (state.width * state.height === state.flagCount + state.openedCount) {
+                state.status = GAME_STATUS.GAME_OVER;
+                state.endTime = Date.now();
+                state.duration = state.endTime - state.startTime;
             }
-
+        },
+        removeFlagCell: (state, action: PayloadAction<{row: number, col: number}>) => {
+            const {row, col} = action.payload;
+            state.gameMap[row][col].isFlagged = false;
+            state.flagCount -= 1;
         }
     },
 });
 
 export const {
     newGame,
-    changeLevel
+    changeLevel,
+    createMapAvoidPoint,
+    openCell,
+    openMine,
+    flagCell,
+    removeFlagCell
 } = gameSlice.actions;
 
 export const selectGame = (state: RootState) => state.game;
+export const selectGameStatus = (state: RootState) => state.game.status;
+export const selectGameMap = (state: RootState) => state.game.gameMap;
+export const selectGameCell = (state: RootState, row: number, col: number) => state.game.gameMap[row][col];
 
 export default gameSlice;

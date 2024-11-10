@@ -1,0 +1,75 @@
+@import 'src/view/style/color.scss';
+@import 'src/view/style/font.scss';
+@import 'src/view/style/mixins.scss';
+@import 'src/view/style/variable.scss';
+
+.game-map {
+  display: grid;
+  margin: 0 auto;
+  gap: 1px;
+
+  &-row {
+    display: grid;
+  }
+
+  &-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: solid 1px $gray3;
+    background-color: $gray5;
+    transition: all 0.25s;
+    border-radius: 2px;
+    font-weight: bold;
+
+
+    &:hover {
+      background-color: $white;
+      scale: 1.04;
+    }
+
+    &.is-opened {
+      background-color: $white;
+
+      &:hover {
+        background-color: $white;
+        scale: 1;
+      }
+    }
+
+    &.is-flagged {
+      background-color: $gray5;
+      color: $black;
+      //color: $red;
+    }
+
+    &.around-0 {
+      color: transparent;
+    }
+    &.around-1 {
+      color: blue;
+    }
+    &.around-2 {
+      color: green;
+    }
+    &.around-3 {
+      color: red;
+    }
+    &.around-4 {
+      color: darkblue;
+    }
+    &.around-5 {
+      color: saddlebrown;
+    }
+    &.around-6 {
+      color: purple;
+    }
+    &.around-7 {
+      color: darkslategray;
+    }
+    &.around-8 {
+      color: black;
+    }
+
+  }
+}
