@@ -6,7 +6,23 @@
 .game-map {
   display: grid;
   margin: 0 auto;
-  gap: 1px;
+  //gap: 1px;
+
+  &-wrapper {
+    width: 100%;
+    padding: 20px;
+    overflow-y: auto;
+  }
+
+  &-status {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: bold;
+  }
 
   &-row {
     display: grid;
@@ -28,6 +44,11 @@
       scale: 1.04;
     }
 
+    &.is-flagged {
+      background-color: $gray5;
+      color: $black;
+    }
+
     &.is-opened {
       background-color: $white;
 
@@ -35,12 +56,6 @@
         background-color: $white;
         scale: 1;
       }
-    }
-
-    &.is-flagged {
-      background-color: $gray5;
-      color: $black;
-      //color: $red;
     }
 
     &.around-0 {

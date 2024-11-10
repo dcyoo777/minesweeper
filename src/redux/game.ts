@@ -28,13 +28,11 @@ export type Game = {
     mines: number;
     gameMap: Cell[][];
     status: typeof GAME_STATUS[keyof typeof GAME_STATUS];
-    level: keyof typeof GAME_LEVELS;
     startTime: number;
     endTime: number;
     duration: number;
     flagCount: number;
     openedCount: number;
-    mineCount: number;
 };
 
 type AppNoteRedux = Game
@@ -106,20 +104,18 @@ const INITIAL_GAME_STATE: AppNoteRedux = {
     mines: 10,
     gameMap: create_clean_map(8, 8),
     status: GAME_STATUS.READY,
-    level: 'Beginner',
     startTime: 0,
     endTime: 0,
     duration: 0,
     flagCount: 0,
     openedCount: 0,
-    mineCount: 0,
 };
 
 const gameSlice: Slice<AppNoteRedux> = createSlice({
     name: 'game',
     initialState: INITIAL_GAME_STATE,
     reducers: {
-        newGame: (state, action) => {
+        newGame: (state) => {
             state.gameMap = create_clean_map(state.width, state.height);
             state.status = GAME_STATUS.READY;
         },
@@ -129,6 +125,7 @@ const gameSlice: Slice<AppNoteRedux> = createSlice({
             state.mines = action.payload.mines;
             state.gameMap = create_clean_map(state.width, state.height);
             state.status = GAME_STATUS.READY;
+            localStorage.setItem('level', JSON.stringify({width: state.width, height: state.height, mines: state.mines}));
         },
         createMapAvoidPoint: (state, action: PayloadAction<{row: number, col: number}>) => {
             const {row, col} = action.payload;
@@ -146,6 +143,12 @@ const gameSlice: Slice<AppNoteRedux> = createSlice({
                 state.status = GAME_STATUS.GAME_OVER;
                 state.endTime = Date.now();
                 state.duration = state.endTime - state.startTime;
+                // @ts-ignore
+                const level = Object.keys(GAME_LEVELS).find((level) => GAME_LEVELS[level].width === state.width && GAME_LEVELS[level].height === state.height && GAME_LEVELS[level].mines === state.mines);
+                if (level) {
+                    const lastTime = localStorage.getItem(level) ? parseInt(localStorage.getItem(level)!) : 9999;
+                    localStorage.setItem(level, Math.min(Math.floor(state.duration / 1000), lastTime).toString());
+                }
             }
         },
         openMine: (state) => {
@@ -162,13 +165,18 @@ const gameSlice: Slice<AppNoteRedux> = createSlice({
         },
         flagCell: (state, action: PayloadAction<{row: number, col: number}>) => {
             const {row, col} = action.payload;
-            console.log('Flag', row, col)
             state.gameMap[row][col].isFlagged = true;
             state.flagCount += 1;
             if (state.width * state.height === state.flagCount + state.openedCount) {
                 state.status = GAME_STATUS.GAME_OVER;
                 state.endTime = Date.now();
                 state.duration = state.endTime - state.startTime;
+                // @ts-ignore
+                const level = Object.keys(GAME_LEVELS).find((level) => GAME_LEVELS[level].width === state.width && GAME_LEVELS[level].height === state.height && GAME_LEVELS[level].mines === state.mines);
+                if (level) {
+                    const lastTime = localStorage.getItem(level) ? parseInt(localStorage.getItem(level)!) : 9999;
+                    localStorage.setItem(level, Math.min(Math.floor(state.duration / 1000), lastTime).toString());
+                }
             }
         },
         removeFlagCell: (state, action: PayloadAction<{row: number, col: number}>) => {

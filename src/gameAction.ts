@@ -31,7 +31,6 @@ export const getAroundCells = (row: number, col: number, width: number, height: 
 export const checkCellAction = (row: number, col: number) => {
 
     const status = selectGameStatus(storeState());
-    console.log(status)
     if (status === GAME_STATUS.GAME_OVER) {
         return;
     }
@@ -43,6 +42,10 @@ export const checkCellAction = (row: number, col: number) => {
     const {width, height} = selectGame(storeState());
     const cell = selectGameCell(storeState(), row, col);
 
+    if (cell.isFlagged) {
+        return;
+    }
+
     if (cell.isMine) {
         storeDispatch(openMine(storeState()));
         return;
@@ -52,7 +55,7 @@ export const checkCellAction = (row: number, col: number) => {
         const aroundCells = getAroundCells(row, col, width, height);
         if (cell.around === aroundCells.filter(targetCell => targetCell.isFlagged).length){
             aroundCells.filter(c => !c.isFlagged && !c.isOpened).forEach(targetCell => {
-                storeDispatch(openCell({row: targetCell.row, col: targetCell.col}));
+                checkCellAction(targetCell.row, targetCell.col);
             });
         }
         return;
@@ -79,6 +82,11 @@ export const checkCellAction = (row: number, col: number) => {
 }
 
 export const flagCellAction = (row: number, col: number) => {
+    const status = selectGameStatus(storeState());
+    if (status === GAME_STATUS.GAME_OVER) {
+        return;
+    }
+
     const cell = selectGameCell(storeState(), row, col);
     if (cell.isOpened) {
         return;

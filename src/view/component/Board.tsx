@@ -1,13 +1,22 @@
-import React, {useEffect} from 'react';
+import React, {useCallback, useEffect, useMemo} from 'react';
 import './Board.scss';
-import {useSelector} from "react-redux";
-import {GAME_STATUS, selectGame} from "../../redux/game";
+import {useDispatch, useSelector} from "react-redux";
+import {GAME_STATUS, newGame, selectGame} from "../../redux/game";
 
 function Board() {
 
-    const {status, duration, flagCount, mines, } = useSelector(selectGame)
+    const dispatch = useDispatch();
+
+    const {status, flagCount, mines} = useSelector(selectGame)
 
     const [spentTime, setSpentTime] = React.useState(0)
+
+    const isClear = useMemo(() => status === GAME_STATUS.GAME_OVER && mines === flagCount, [status, mines, flagCount])
+
+    const onClickNewGame = useCallback(() => {
+        // @ts-ignore
+        dispatch(newGame())
+    }, [dispatch])
 
     useEffect(() => {
         if (status === GAME_STATUS.PLAYING) {
@@ -19,18 +28,29 @@ function Board() {
                 clearInterval(interval)
             }
         }
+        if (status === GAME_STATUS.READY) {
+            setSpentTime(0)
+        }
     }, [status]);
+
+    useEffect(() => {
+        if (isClear) {
+            console.log('Game Clear')
+        }
+    }, [isClear]);
 
     return (
         <div className={"board"}>
-            <div className={"board-score"}>
-                {mines - flagCount}
+            <div className={"board-data"}>
+                <div className={"board-data-label"}>Remain Mines</div>
+                <div className={"board-data-value"}>{mines - flagCount}</div>
             </div>
-            <button className={'board-button'}>
+            <button className={'board-button'} onClick={onClickNewGame}>
                 New Game
             </button>
-            <div className={"board-score"}>
-                {spentTime}
+            <div className={"board-data"}>
+                <div className={"board-data-label"}>Spend Time</div>
+                <div className={"board-data-value"}>{spentTime}</div>
             </div>
         </div>
     );
