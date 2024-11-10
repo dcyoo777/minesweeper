@@ -14,7 +14,6 @@ function PersonalBestModal({isOpen, onClose}: LevelCustomModalProps) {
 
     useEffect(() => {
         setRecord(Object.keys(GAME_LEVELS).reduce((res, level) => {
-            console.log(level, localStorage.getItem(level))
             return {
                 ...res,
                 [level]: localStorage.getItem(level) ?? 9999

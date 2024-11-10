@@ -66,7 +66,6 @@ export const checkCellAction = (row: number, col: number) => {
     while (openQueue.length > 0) {
         const {row: r, col: c} = openQueue.shift()!;
         const targetCell = selectGameCell(storeState(), r, c);
-        console.log(r, c, targetCell)
         if (targetCell.isOpened || targetCell.isFlagged) {
             continue;
         }

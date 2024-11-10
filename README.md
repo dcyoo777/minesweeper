@@ -1,47 +1,43 @@
-# Getting Started with Create React App
+# MINESWEEPER
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+React, Redux 를 사용한 지뢰찾기 게임입니다.
 
-## Available Scripts
+## 실행 방법
 
-In the project directory, you can run:
+### `npm install`
+
+npm install 명령어를 실행하여 필요한 패키지를 설치합니다.
 
 ### `npm start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+npm start 명령어를 실행하여 개발 서버를 실행합니다.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## 추가 구현 내용
 
-### `npm test`
+### Area Open
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- 이미 공개되어 주변에 있는 지뢰의 개수가 밝혀진 영역을 클릭했을 때, 주변에 있는 깃발의 개수와 주변에 있는 지뢰의 개수가 같다면 주변 영역을 자동으로 오픈합니다.
 
-### `npm run build`
+- 이때 깃발의 위치가 잘못되어 있다면 즉시 게임이 종료됩니다.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- 윈도우에서는 마우스 양쪽을 동시에 클릭하지만, 레퍼런스로 제공된 게임에서는 마우스 왼쪽 버튼만으로 작동하여 그대로 구현하였습니다.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### 난이도 저장
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- 난이도를 변경할 경우, 변경된 난이도를 로컬 스토리지에 저장하여 새로고침해도 변경된 난이도로 게임을 시작할 수 있습니다.
 
-### `npm run eject`
+### 베스트 스코어
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+- 게임을 클리어한 경우, 클리어한 시간을 기록하여 베스트 스코어를 확인할 수 있습니다.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### 렌더링 최적화
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+- 불필요한 렌더링을 최소화하기 위해 useMemo, useCallback 등을 사용하여 최적화를 진행하였습니다.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### UI
 
-## Learn More
+- 영역 Hover 시, 영역이 강조되도록 하였습니다.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- 클리어 또는 패배 시, 텍스트를 표시합니다.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-# minesweeper
+- 작은 화면에서는 지뢰찾기 영역이 스크롤되도록 하였습니다.

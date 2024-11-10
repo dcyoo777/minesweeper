@@ -33,12 +33,6 @@ function Board() {
         }
     }, [status]);
 
-    useEffect(() => {
-        if (isClear) {
-            console.log('Game Clear')
-        }
-    }, [isClear]);
-
     return (
         <div className={"board"}>
             <div className={"board-data"}>
