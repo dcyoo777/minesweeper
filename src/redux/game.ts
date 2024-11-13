@@ -35,7 +35,7 @@ export type Game = {
     openedCount: number;
 };
 
-type AppNoteRedux = Game
+type GameRedux = Game
 
 const create_clean_map = (width: number, height: number): Cell[][] => {
     const map: Cell[][] = [];
@@ -98,7 +98,7 @@ const create_mine_map = (width: number, height: number, mines: number, avoidX: n
     return newMap;
 }
 
-const INITIAL_GAME_STATE: AppNoteRedux = {
+const INITIAL_GAME_STATE: GameRedux = {
     width: 8,
     height: 8,
     mines: 10,
@@ -111,7 +111,7 @@ const INITIAL_GAME_STATE: AppNoteRedux = {
     openedCount: 0,
 };
 
-const gameSlice: Slice<AppNoteRedux> = createSlice({
+const gameSlice: Slice<GameRedux> = createSlice({
     name: 'game',
     initialState: INITIAL_GAME_STATE,
     reducers: {
